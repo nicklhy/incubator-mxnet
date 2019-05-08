@@ -115,6 +115,9 @@ class GraphProto(object): # pylint: disable=too-few-public-methods
             inputs = [self._nodes[i] for i in node.input]
             mxnet_sym = self._convert_operator(node_name, op_name, onnx_attr, inputs)
 
+            if op_name == 'Constant':
+                self._params[mxnet_sym.name] = self._parse_array(node.attribute[0].t)
+
             for k, i in zip(list(node.output), range(len(mxnet_sym.list_outputs()))):
                 self._nodes[k] = mxnet_sym[i]
 
